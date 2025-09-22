@@ -33,7 +33,7 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'role' => ['required', 'string', 'in:user,tecnica'], // Validação do tipo de usuário
+            'role' => ['required', 'string', 'in:user,tecnica,admin'], // Validação do tipo de usuário
         ]);
         
         

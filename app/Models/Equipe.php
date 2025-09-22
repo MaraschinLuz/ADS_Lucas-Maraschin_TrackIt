@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Chamado;
 
 class Equipe extends Model
 {
@@ -22,8 +21,11 @@ class Equipe extends Model
         return $this->hasMany(Chamado::class);
     }
 
-    public function usuarios()
-{
-    return $this->hasMany(User::class);
-}
+    /**
+     * Uma equipe pode ter vários usuários (técnicos).
+     */
+    public function users()
+    {
+        return $this->hasMany(User::class, 'equipe_id');
+    }
 }

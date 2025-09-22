@@ -50,6 +50,7 @@
                 <select id="role" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600" name="role" required>
                     <option value="user">Usuário</option>
                     <option value="tecnica">Técnico</option>
+                    <option value="tecnica">Administrador</option>
                 </select>
                 @error('role')
                     <p class="text-red-500 text-xs italic mt-2 dark:text-red-400">{{ $message }}</p>

@@ -6,6 +6,8 @@ use App\Http\Controllers\ChamadoController;
 use App\Http\Controllers\EquipeController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\EquipeUsuarioController;
+use App\Http\Controllers\AdminEquipeController;
+
 
 
 Route::get('/', function () {
@@ -42,5 +44,13 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/atribuir-usuarios', [EquipeController::class, 'atribuirUsuariosForm'])
     ->middleware('auth')
     ->name('equipes.atribuir');
+
+Route::middleware(['auth','admin'])->group(function () {
+    Route::get('/admin/equipes', [\App\Http\Controllers\AdminEquipeController::class, 'index'])
+        ->name('admin.equipes.index');
+    Route::get('/admin/equipes', [AdminEquipeController::class, 'index'])->name('admin.equipes.index');
+    Route::post('/admin/equipes/atribuir', [AdminEquipeController::class, 'atribuir'])->name('admin.equipes.atribuir');
+    Route::post('/admin/equipes/remover',  [AdminEquipeController::class, 'remover'])->name('admin.equipes.remover');
+});
 
 require __DIR__.'/auth.php';

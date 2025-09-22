@@ -14,28 +14,35 @@
                     </a>
                 </div>
 
-
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex items-center">
-                    <!-- Chamados - todos usuários -->
-                    <x-nav-link :href="route('dashboard')">
+                    <!-- Dashboard -->
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
+                    <!-- Chamados -->
                     <x-nav-link :href="route('chamados.index')" :active="request()->routeIs('chamados.*')">
                         {{ __('Chamados') }}
                     </x-nav-link>
 
                     @auth
-                        @if(auth()->user()->role === 'tecnica')
-                            <!-- Equipes - só técnica -->
+                        @if(auth()->user()->isTecnico())
+                            <!-- Equipes - técnico -->
                             <x-nav-link :href="route('equipes.index')" :active="request()->routeIs('equipes.*')">
                                 {{ __('Equipes') }}
                             </x-nav-link>
 
-                            <!-- Logs - só técnica -->
+                            <!-- Logs - técnico -->
                             <x-nav-link :href="route('logs.index')" :active="request()->routeIs('logs.*')">
                                 {{ __('Histórico de Ações') }}
+                            </x-nav-link>
+                        @endif
+
+                        @if(auth()->user()->isAdmin())
+                            <!-- Admin - somente administrador -->
+                            <x-nav-link :href="route('admin.equipes.index')" :active="request()->routeIs('admin.equipes.*')">
+                                {{ __('Admin · Equipes') }}
                             </x-nav-link>
                         @endif
                     @endauth
@@ -71,7 +78,6 @@
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-
                             <x-dropdown-link :href="route('logout')"
                                 onclick="event.preventDefault();
                                 this.closest('form').submit();">
@@ -103,13 +109,18 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
+            <!-- Dashboard -->
+            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+
             <!-- Chamados -->
             <x-responsive-nav-link :href="route('chamados.index')" :active="request()->routeIs('chamados.*')">
                 {{ __('Chamados') }}
             </x-responsive-nav-link>
 
             @auth
-                @if(auth()->user()->role === 'tecnica')
+                @if(auth()->user()->isTecnico())
                     <!-- Equipes -->
                     <x-responsive-nav-link :href="route('equipes.index')" :active="request()->routeIs('equipes.*')">
                         {{ __('Equipes') }}
@@ -118,6 +129,13 @@
                     <!-- Logs -->
                     <x-responsive-nav-link :href="route('logs.index')" :active="request()->routeIs('logs.*')">
                         {{ __('Histórico de Ações') }}
+                    </x-responsive-nav-link>
+                @endif
+
+                @if(auth()->user()->isAdmin())
+                    <!-- Admin -->
+                    <x-responsive-nav-link :href="route('admin.equipes.index')" :active="request()->routeIs('admin.equipes.*')">
+                        {{ __('Admin · Equipes') }}
                     </x-responsive-nav-link>
                 @endif
             @endauth
@@ -138,7 +156,6 @@
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-
                     <x-responsive-nav-link :href="route('logout')"
                         onclick="event.preventDefault();
                             this.closest('form').submit();">

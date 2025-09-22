@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Chamado;
+use App\Models\User;
 use App\Models\Equipe;
 use App\Models\Log;
 use App\Models\Mensagem;
@@ -21,27 +22,19 @@ class ChamadoController extends Controller
     /**
      * Exibe a lista de chamados do usuário.
      */
-    public function index(): View
-    {
-        if (Auth::user()->role === 'tecnica') {
-            $chamados = Chamado::with('equipe')->latest()->paginate(10);
-        } else {
-            $chamados = Chamado::with('equipe')
-                ->where('user_id', Auth::id())
-                ->latest()
-                ->paginate(10);
+public function index(): View
+{
+        $user = Auth::user();
+        $query = Chamado::with('equipe');
+
+        // Admin e Técnico veem tudo; Usuário comum vê só os próprios
+        if (! $user->isAdmin() && ! $user->isTecnico()) {
+            $query->where('user_id', $user->id);
         }
 
-        if ($user->equipe_id) {
-            $chamados->where('equipe_id', $user->equipe_id);
-        }
-    
-        return view('chamados.index', [
-            'chamados' => $chamados->latest()->paginate(10),
-        ]);
-
+        $chamados = $query->latest()->paginate(10)->withQueryString();
         return view('chamados.index', compact('chamados'));
-    }
+}
 
     /**
      * Exibe o formulário para criar um novo chamado.
@@ -94,15 +87,13 @@ class ChamadoController extends Controller
     /**
      * Exibe os detalhes de um chamado específico.
      */
-    public function show(Chamado $chamado): View
-    {
-        $this->authorize('view', $chamado);
-        // carregar mensagens com usuário para evitar N+1
-        $chamado->load(['mensagens.user', 'equipe']);
-        $this->authorize('view', $chamado);
-        $chamado->load('anexos');
-        return view('chamados.show', compact('chamado'));
-    }
+public function show(Chamado $chamado): View
+{
+    $this->authorize('view', $chamado);
+
+    $chamado->load(['mensagens.user', 'equipe', 'anexos']); // carrega tudo de uma vez
+    return view('chamados.show', compact('chamado'));
+}
 
     /**
      * Exibe o formulário de edição de um chamado.
