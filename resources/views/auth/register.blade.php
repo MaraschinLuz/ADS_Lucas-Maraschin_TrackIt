@@ -45,17 +45,6 @@
                 @enderror
             </div>
 
-            <div class="mb-6">
-                <label for="role" class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Tipo de Usuário</label>
-                <select id="role" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600" name="role" required>
-                    <option value="user">Usuário</option>
-                    <option value="tecnica">Técnico</option>
-                    <option value="tecnica">Administrador</option>
-                </select>
-                @error('role')
-                    <p class="text-red-500 text-xs italic mt-2 dark:text-red-400">{{ $message }}</p>
-                @enderror
-            </div>
 
             <div class="flex items-center justify-between">
                 <button type="submit" class="bg-blue-500 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">

@@ -14,7 +14,7 @@
                     </a>
                 </div>
 
-                <!-- Navigation Links -->
+                <!-- Navigation Links (desktop) -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex items-center">
                     <!-- Dashboard -->
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
@@ -27,22 +27,26 @@
                     </x-nav-link>
 
                     @auth
-                        @if(auth()->user()->isTecnico())
-                            <!-- Equipes - técnico -->
+                        @if(auth()->user()->isAdmin())
+                            <!-- Equipes - técnico 
                             <x-nav-link :href="route('equipes.index')" :active="request()->routeIs('equipes.*')">
                                 {{ __('Equipes') }}
-                            </x-nav-link>
+                            </x-nav-link>-->
 
                             <!-- Logs - técnico -->
                             <x-nav-link :href="route('logs.index')" :active="request()->routeIs('logs.*')">
                                 {{ __('Histórico de Ações') }}
                             </x-nav-link>
-                        @endif
 
-                        @if(auth()->user()->isAdmin())
-                            <!-- Admin - somente administrador -->
+
+
+                            <!-- Admin (desktop) -->
                             <x-nav-link :href="route('admin.equipes.index')" :active="request()->routeIs('admin.equipes.*')">
-                                {{ __('Admin · Equipes') }}
+                                {{ __('Equipes') }}
+                            </x-nav-link>
+
+                            <x-nav-link :href="route('admin.usuarios.tecnico.create')" :active="request()->routeIs('admin.usuarios.tecnico.*')">
+                                {{ __('Criar Técnico') }}
                             </x-nav-link>
                         @endif
                     @endauth
@@ -106,7 +110,7 @@
         </div>
     </div>
 
-    <!-- Responsive Navigation Menu -->
+    <!-- Responsive Navigation Menu (mobile) -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <!-- Dashboard -->
@@ -120,7 +124,7 @@
             </x-responsive-nav-link>
 
             @auth
-                @if(auth()->user()->isTecnico())
+                @if(auth()->user()->isAdmin())
                     <!-- Equipes -->
                     <x-responsive-nav-link :href="route('equipes.index')" :active="request()->routeIs('equipes.*')">
                         {{ __('Equipes') }}
@@ -130,12 +134,15 @@
                     <x-responsive-nav-link :href="route('logs.index')" :active="request()->routeIs('logs.*')">
                         {{ __('Histórico de Ações') }}
                     </x-responsive-nav-link>
-                @endif
 
-                @if(auth()->user()->isAdmin())
-                    <!-- Admin -->
+
+                    <!-- Admin (mobile) -->
                     <x-responsive-nav-link :href="route('admin.equipes.index')" :active="request()->routeIs('admin.equipes.*')">
-                        {{ __('Admin · Equipes') }}
+                        {{ __('Equipes') }}
+                    </x-responsive-nav-link>
+
+                    <x-responsive-nav-link :href="route('admin.usuarios.tecnico.create')" :active="request()->routeIs('admin.usuarios.tecnico.*')">
+                        {{ __('Criar Técnico') }}
                     </x-responsive-nav-link>
                 @endif
             @endauth

@@ -6,21 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up()
+    public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('equipe_id')->nullable()->constrained('equipes')->onDelete('set null');
+            // Garante que a coluna 'role' exista e define o default como 'usuario'
+            $table->string('role')->default('usuario')->change();
         });
     }
-    
-    public function down()
+
+    public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign(['equipe_id']);
-            $table->dropColumn('equipe_id');
+            // Se quiser reverter, remove o default
+            $table->string('role')->default(null)->change();
         });
     }
 };

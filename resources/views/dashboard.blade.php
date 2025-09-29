@@ -23,7 +23,7 @@
                             Editar Perfil
                         </a>
 
-                        @if(Auth::user()->role === 'tecnica')
+                        @if(Auth::user()->role === 'admin')
                             <a href="{{ route('equipes.create') }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-md focus:outline-none focus:shadow-outline">
                                 Criar Nova Equipe
                             </a>

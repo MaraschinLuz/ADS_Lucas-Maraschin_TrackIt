@@ -521,6 +521,8 @@ class ComposerStaticInitc5928c920c9ff17225157dabc93f66a0
     );
 
     public static $classMap = array (
+        'App\\Http\\Controllers\\AdminEquipeController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminEquipeController.php',
+        'App\\Http\\Controllers\\AdminUserController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminUserController.php',
         'App\\Http\\Controllers\\AnexoController' => __DIR__ . '/../..' . '/app/Http/Controllers/AnexoController.php',
         'App\\Http\\Controllers\\Auth\\AuthenticatedSessionController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/AuthenticatedSessionController.php',
         'App\\Http\\Controllers\\Auth\\ConfirmablePasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ConfirmablePasswordController.php',
@@ -537,6 +539,8 @@ class ComposerStaticInitc5928c920c9ff17225157dabc93f66a0
         'App\\Http\\Controllers\\EquipeUsuarioController' => __DIR__ . '/../..' . '/app/Http/Controllers/EquipeUsuarioController.php',
         'App\\Http\\Controllers\\LogController' => __DIR__ . '/../..' . '/app/Http/Controllers/LogController.php',
         'App\\Http\\Controllers\\ProfileController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProfileController.php',
+        'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
+        'App\\Http\\Middleware\\AdminOnly' => __DIR__ . '/../..' . '/app/Http/Middleware/AdminOnly.php',
         'App\\Http\\Requests\\Auth\\LoginRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Auth/LoginRequest.php',
         'App\\Http\\Requests\\ProfileUpdateRequest' => __DIR__ . '/../..' . '/app/Http/Requests/ProfileUpdateRequest.php',
         'App\\Models\\Anexo' => __DIR__ . '/../..' . '/app/Models/Anexo.php',

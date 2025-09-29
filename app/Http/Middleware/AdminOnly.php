@@ -1,6 +1,5 @@
 <?php
 
-// app/Http/Middleware/AdminOnly.php
 namespace App\Http\Middleware;
 
 use Closure;
@@ -10,9 +9,12 @@ class AdminOnly
 {
     public function handle(Request $request, Closure $next)
     {
-        if (!$request->user() || !$request->user()->isAdmin()) {
+        $user = $request->user();
+
+        if (!$user || !method_exists($user, 'isAdmin') || !$user->isAdmin()) {
             abort(403, 'Acesso restrito ao Administrador.');
         }
+
         return $next($request);
     }
 }
