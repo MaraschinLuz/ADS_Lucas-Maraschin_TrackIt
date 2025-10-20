@@ -39,7 +39,6 @@
                             </x-nav-link>
 
 
-
                             <!-- Admin (desktop) -->
                             <x-nav-link :href="route('admin.equipes.index')" :active="request()->routeIs('admin.equipes.*')">
                                 {{ __('Equipes') }}
@@ -47,6 +46,10 @@
 
                             <x-nav-link :href="route('admin.usuarios.tecnico.create')" :active="request()->routeIs('admin.usuarios.tecnico.*')">
                                 {{ __('Criar Técnico') }}
+                            </x-nav-link>
+
+                            <x-nav-link :href="route('admin.usuarios.index')" :active="request()->routeIs('admin.usuarios.index')">
+                                {{ __('Admin · Usuários') }}
                             </x-nav-link>
                         @endif
                     @endauth
@@ -144,6 +147,11 @@
                     <x-responsive-nav-link :href="route('admin.usuarios.tecnico.create')" :active="request()->routeIs('admin.usuarios.tecnico.*')">
                         {{ __('Criar Técnico') }}
                     </x-responsive-nav-link>
+                    
+                    <x-responsive-nav-link :href="route('admin.usuarios.index')" :active="request()->routeIs('admin.usuarios.index')">
+                        {{ __('Admin · Usuários') }}
+                    </x-responsive-nav-link>
+
                 @endif
             @endauth
         </div>
