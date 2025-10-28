@@ -1,4 +1,4 @@
-<x-app-layout>
+﻿<x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Detalhes do Chamado') }} #{{ $chamado->id }}
@@ -16,9 +16,9 @@
                         <p class="mt-1 text-gray-900 dark:text-gray-100">{{ $chamado->titulo }}</p>
                     </div>
 
-                    <!-- Descrição -->
+                    <!-- DescriÃ§Ã£o -->
                     <div class="mb-4">
-                        <h3 class="text-lg font-bold text-gray-700 dark:text-gray-300">{{ __('Descrição:') }}</h3>
+                        <h3 class="text-lg font-bold text-gray-700 dark:text-gray-300">{{ __('DescriÃ§Ã£o:') }}</h3>
                         <p class="mt-1 text-gray-900 dark:text-gray-100 whitespace-pre-line">{{ $chamado->descricao }}</p>
                     </div>
 
@@ -81,7 +81,7 @@
                         @endif
                     </div>
 
-                    <!-- Formulário para adicionar anexo -->
+                    <!-- FormulÃ¡rio para adicionar anexo -->
                     <div class="mb-6">
                         <h3 class="text-lg font-bold text-gray-700 dark:text-gray-300">{{ __('Adicionar Anexo') }}</h3>
                         <form action="{{ route('chamados.anexos.store', $chamado) }}" method="POST" enctype="multipart/form-data" class="space-y-2">
@@ -128,7 +128,7 @@
                         </form>
                     </div>
 
-                    <!-- Botões -->
+                    <!-- BotÃµes -->
                     <div class="flex justify-between items-center mt-6">
                         <a href="{{ route('chamados.index') }}"
                            class="inline-flex items-center px-4 py-2 bg-gray-300 dark:bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-gray-700 dark:text-gray-300 uppercase tracking-widest hover:bg-gray-400 dark:hover:bg-gray-500 focus:bg-gray-400 dark:focus:bg-gray-500 active:bg-gray-500 dark:active:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">
@@ -162,7 +162,7 @@
                 img.style.maxHeight = '80px';
                 img.style.borderRadius = '4px';
                 img.style.boxShadow = '0 0 5px rgba(0,0,0,0.2)';
-                img.alt = "Pré-visualização do anexo";
+                img.alt = "PrÃ©-visualizaÃ§Ã£o do anexo";
                 img.src = URL.createObjectURL(file);
                 preview.appendChild(img);
             } else {

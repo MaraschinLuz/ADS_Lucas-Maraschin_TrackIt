@@ -15,7 +15,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+        <div class="min-h-screen bg-gradient-to-b from-indigo-50 to-white dark:from-gray-900 dark:to-gray-900">
             @include('layouts.navigation')
 
             {{-- Admin Toolbar: aparece apenas para administradores --}}
@@ -55,7 +55,12 @@
 
             <!-- Page Content -->
             <main>
-                {{ $slot }}
+                @include('components.toast')
+                @hasSection('content')
+                    @yield('content')
+                @else
+                    {{ $slot ?? '' }}
+                @endif
             </main>
         </div>
     </body>

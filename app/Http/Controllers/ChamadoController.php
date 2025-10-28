@@ -22,18 +22,39 @@ class ChamadoController extends Controller
     /**
      * Exibe a lista de chamados do usuário.
      */
-public function index(): View
+public function index(): \Illuminate\View\View
 {
-        $user = Auth::user();
-        $query = Chamado::with('equipe');
+    $user = \Illuminate\Support\Facades\Auth::user();
 
-        // Admin e Técnico veem tudo; Usuário comum vê só os próprios
-        if (! $user->isAdmin() && ! $user->isTecnico()) {
-            $query->where('user_id', $user->id);
+    if ($user->role === 'admin') {
+        $chamados = \App\Models\Chamado::with(['equipe', 'user'])
+            ->latest()
+            ->paginate(10);
+    } elseif ($user->role === 'tecnica') {
+        // técnico sem equipe -> lista vazia
+        if (!$user->equipe_id) {
+            $chamados = collect([]); // view deve tratar (ou use LengthAwarePaginator vazio)
+            return view('chamados.index', [
+                'chamados' => new \Illuminate\Pagination\LengthAwarePaginator(
+                    [], 0, 10, 1, ['path' => request()->url(), 'query' => request()->query()]
+                ),
+                'alerta' => 'Você é técnico, mas ainda não foi designado a uma equipe.'
+            ]);
         }
 
-        $chamados = $query->latest()->paginate(10)->withQueryString();
-        return view('chamados.index', compact('chamados'));
+        $chamados = \App\Models\Chamado::with(['equipe', 'user'])
+            ->where('equipe_id', $user->equipe_id)
+            ->latest()
+            ->paginate(10);
+    } else {
+        // usuário comum
+        $chamados = \App\Models\Chamado::with(['equipe', 'user'])
+            ->where('user_id', $user->id)
+            ->latest()
+            ->paginate(10);
+    }
+
+    return view('chamados.index', compact('chamados'));
 }
 
     /**

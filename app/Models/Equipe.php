@@ -28,4 +28,12 @@ class Equipe extends Model
     {
         return $this->hasMany(User::class, 'equipe_id');
     }
+
+    /**
+     * Mensagens do chat desta equipe.
+     */
+    public function mensagens()
+    {
+        return $this->hasMany(\App\Models\EquipeMensagem::class, 'equipe_id');
+    }
 }

@@ -1,8 +1,13 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Admin · Equipes & Técnicos') }}
-        </h2>
+        <div class="flex items-center justify-between">
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                {{ __('Gerir Equipes e Técnicos') }}
+            </h2>
+            <a href="{{ route('equipes.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                Nova Equipe
+            </a>
+        </div>
     </x-slot>
 
     <div class="py-6">
@@ -52,7 +57,7 @@
                                                     @csrf
                                                     <input type="hidden" name="user_id" value="{{ $tec->id }}">
                                                     <select name="equipe_id" class="rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 focus:border-indigo-500 focus:ring-indigo-500" required>
-                                                        <option value="">Selecione…</option>
+                                                        <option value="">Selecione...</option>
                                                         @foreach($todasEquipes as $eq)
                                                             <option value="{{ $eq->id }}">{{ $eq->nome }}</option>
                                                         @endforeach
@@ -110,7 +115,7 @@
                                                         @csrf
                                                         <input type="hidden" name="user_id" value="{{ $tec->id }}">
                                                         <select name="equipe_id" class="rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 focus:border-indigo-500 focus:ring-indigo-500" required>
-                                                            <option value="">Mover para…</option>
+                                                            <option value="">Mover para...</option>
                                                             @foreach($todasEquipes as $eq)
                                                                 @if($eq->id !== $equipe->id)
                                                                     <option value="{{ $eq->id }}">{{ $eq->nome }}</option>

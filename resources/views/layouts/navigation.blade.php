@@ -27,6 +27,14 @@
                     </x-nav-link>
 
                     @auth
+                        @if(auth()->user()->equipe_id)
+                            <x-nav-link :href="route('equipe.membros')" :active="request()->routeIs('equipe.membros')">
+                                {{ __('Membros') }}
+                            </x-nav-link>
+                            <x-nav-link :href="route('equipe.chat')" :active="request()->routeIs('equipe.chat')">
+                                {{ __('Chat da Equipe') }}
+                            </x-nav-link>
+                        @endif
                         @if(auth()->user()->isAdmin())
                             <!-- Equipes - técnico 
                             <x-nav-link :href="route('equipes.index')" :active="request()->routeIs('equipes.*')">
@@ -127,6 +135,14 @@
             </x-responsive-nav-link>
 
             @auth
+                @if(auth()->user()->equipe_id)
+                    <x-responsive-nav-link :href="route('equipe.membros')" :active="request()->routeIs('equipe.membros')">
+                        {{ __('Membros') }}
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('equipe.chat')" :active="request()->routeIs('equipe.chat')">
+                        {{ __('Chat da Equipe') }}
+                    </x-responsive-nav-link>
+                @endif
                 @if(auth()->user()->isAdmin())
                     <!-- Equipes -->
                     <x-responsive-nav-link :href="route('equipes.index')" :active="request()->routeIs('equipes.*')">

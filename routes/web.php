@@ -3,12 +3,15 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ChamadoController;
 use App\Http\Controllers\EquipeController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\EquipeUsuarioController;
 use App\Http\Controllers\AdminEquipeController;
 use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\EquipeChatController;
+use App\Http\Controllers\EquipeMembrosController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -17,9 +20,9 @@ Route::get('/', function () {
 /**
  * Dashboard (exige autenticação e e-mail verificado)
  */
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 /**
  * Área autenticada (todos os papéis)
@@ -49,6 +52,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/atribuir-usuarios',      [EquipeUsuarioController::class, 'edit'])->name('equipes.usuarios.edit');
     Route::post('/atribuir-usuarios',     [EquipeUsuarioController::class, 'update'])->name('equipes.usuarios.update');
     Route::get('/atribuir-usuarios-form', [EquipeController::class, 'atribuirUsuariosForm'])->name('equipes.atribuir');
+
+    // Chat da equipe e membros
+    Route::get('/equipe/chat', [EquipeChatController::class, 'index'])->name('equipe.chat');
+    Route::get('/equipe/chat/messages', [EquipeChatController::class, 'list'])->name('equipe.chat.list');
+    Route::post('/equipe/chat/messages', [EquipeChatController::class, 'store'])->name('equipe.chat.store');
+    Route::get('/equipe/membros', [EquipeMembrosController::class, 'index'])->name('equipe.membros');
 });
 
 /**
