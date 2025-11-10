@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\EquipeMensagem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\EquipeNewMessage;
+use App\Models\User;
 
 class EquipeChatController extends Controller
 {
@@ -66,6 +69,15 @@ class EquipeChatController extends Controller
             'mensagem' => $validated['mensagem'],
         ]);
 
+        // Notifica membros da equipe (sem o remetente)
+        $alvos = User::where('equipe_id', $user->equipe_id)
+            ->where('id', '!=', $user->id)
+            ->get();
+        if ($alvos->isNotEmpty()) {
+            $preview = mb_substr($msg->mensagem, 0, 120);
+            Notification::send($alvos, new EquipeNewMessage((int)$user->equipe_id, (string)$user->name, (string)$preview));
+        }
+
         return response()->json([
             'id' => $msg->id,
             'user' => $user->name,
@@ -74,4 +86,3 @@ class EquipeChatController extends Controller
         ], 201);
     }
 }
-

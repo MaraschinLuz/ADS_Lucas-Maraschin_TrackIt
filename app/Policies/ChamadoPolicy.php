@@ -71,6 +71,20 @@ class ChamadoPolicy
     }
 
     /**
+     * Permissão específica usada na UI para habilitar edição de Status/Prioridade.
+     * - Admin: permitido
+     * - Técnico: permitido apenas para chamados da própria equipe
+     */
+    public function updatePriorityAndStatus(User $user, Chamado $chamado): bool
+    {
+        if ($this->isAdmin($user)) {
+            return true;
+        }
+
+        return $this->tecnicoMesmoTime($user, $chamado);
+    }
+
+    /**
      * Excluir chamado.
      * - Admin: tudo
      * - Técnico: se for da própria equipe (ajuste conforme sua regra)

@@ -14,8 +14,10 @@ class DashboardController extends Controller
         $user = Auth::user();
 
         $role = $user->role ?? 'usuario';
+        $period = (int) request()->query('period', 30);
+        if (!in_array($period, [7,14,30,90], true)) { $period = 30; }
         $now = now();
-        $from = $now->copy()->subDays(30);
+        $from = $now->copy()->subDays($period);
 
         $result = [
             'role' => $role,
@@ -40,6 +42,28 @@ class DashboardController extends Controller
 
             $result['equipes'] = $equipes;
             $result['trend'] = $trend;
+            // KPIs globais
+            $statusCounts = Chamado::selectRaw('status, COUNT(*) as c')->groupBy('status')->pluck('c','status');
+            $result['global_counts'] = [
+                'aberto' => (int) ($statusCounts['aberto'] ?? 0),
+                'em andamento' => (int) ($statusCounts['em andamento'] ?? 0),
+                'resolvido' => (int) ($statusCounts['resolvido'] ?? 0),
+                'fechado' => (int) ($statusCounts['fechado'] ?? 0),
+            ];
+
+            // Violações de SLA (abertos/andamento vencidos)
+            $abertos = Chamado::with('user','equipe')
+                ->whereNotIn('status', ['resolvido','fechado'])
+                ->latest()
+                ->limit(200)
+                ->get();
+            $now = now();
+            $violados = $abertos->filter(function($c) use ($now){
+                $due = $c->slaDueAt();
+                return $due && $due->lt($now);
+            });
+            $result['sla_violations_count'] = $violados->count();
+            $result['sla_violations_list'] = $violados->sortBy('created_at')->take(5);
             // Dados prontos para gráficos (evita lógica PHP complexa no Blade)
             $result['team_labels'] = $equipes->pluck('nome')->values();
             $result['team_data'] = [
@@ -73,6 +97,16 @@ class DashboardController extends Controller
             ];
             $result['trend'] = $trend;
             $result['equipes'] = $equipes; // para título
+
+            // Violações de SLA (somente da equipe)
+            $abertos = Chamado::with('user','equipe')
+                ->where('equipe_id', $equipeId)
+                ->whereNotIn('status', ['resolvido','fechado'])
+                ->latest()->limit(200)->get();
+            $now = now();
+            $violados = $abertos->filter(fn($c)=> $c->slaDueAt() && $c->slaDueAt()->lt($now));
+            $result['sla_violations_count'] = $violados->count();
+            $result['sla_violations_list'] = $violados->sortBy('created_at')->take(5);
         } else {
             // Usuário comum: seus próprios chamados
             $counts = Chamado::where('user_id', $user->id)
@@ -96,6 +130,7 @@ class DashboardController extends Controller
             $result['trend'] = $trend;
         }
 
+        $result['period'] = $period;
         return view('dashboard', $result);
     }
 }

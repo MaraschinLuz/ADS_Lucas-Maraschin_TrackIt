@@ -63,5 +63,80 @@
                 @endif
             </main>
         </div>
+        <script>
+            (function(){
+                const holder = document.createElement('div');
+                holder.className = 'fixed z-50 top-4 right-4 space-y-2';
+                document.addEventListener('DOMContentLoaded', ()=> document.body.appendChild(holder));
+
+                function showToast(msg){
+                    const wrap = document.createElement('div');
+                    wrap.className = 'rounded-md shadow px-4 py-3 bg-blue-50 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200';
+                    wrap.textContent = msg;
+                    holder.appendChild(wrap);
+                    setTimeout(()=>{ wrap.remove(); }, 4000);
+                }
+
+                function getSeen(){
+                    try { return JSON.parse(localStorage.getItem('notif_seen')||'[]'); } catch(e){ return []; }
+                }
+                function addSeen(id){
+                    const seen = new Set(getSeen());
+                    seen.add(id);
+                    localStorage.setItem('notif_seen', JSON.stringify(Array.from(seen)));
+                }
+                async function updateBell(){
+                    try {
+                        const res = await fetch('{{ route('notifications.index') }}', { headers: { 'Accept':'application/json' } });
+                        if(!res.ok) return;
+                        const data = await res.json();
+                        const countEl = document.getElementById('notif-count');
+                        if(countEl){
+                            const c = (data||[]).length;
+                            countEl.textContent = c > 99 ? '99+' : String(c);
+                            countEl.classList.toggle('hidden', c === 0);
+                        }
+                    } catch(e){}
+                }
+                async function poll(){
+                    try {
+                        const res = await fetch('{{ route('notifications.index') }}', { headers: { 'Accept':'application/json' } });
+                        if(!res.ok) return;
+                        const data = await res.json();
+                        const seen = new Set(getSeen());
+                        for(const n of data){
+                            if(!seen.has(n.id)){
+                                showToast(n.message);
+                                addSeen(n.id);
+                            }
+                        }
+                        updateBell();
+                    } catch(e){}
+                }
+                setInterval(poll, 12000);
+                document.addEventListener('DOMContentLoaded', ()=>{
+                    updateBell();
+                    const list = document.getElementById('notif-list');
+                    const bell = document.getElementById('notif-bell');
+                    if(bell && list){
+                        bell.addEventListener('click', async ()=>{
+                            try{
+                                list.innerHTML = '<div class="text-gray-500 dark:text-gray-400">Carregando...</div>';
+                                const res = await fetch('{{ route('notifications.index') }}', { headers: { 'Accept':'application/json' } });
+                                const data = res.ok ? await res.json() : [];
+                                if(!data.length){ list.innerHTML = '<div class="text-gray-500 dark:text-gray-400">Sem novas notificações.</div>'; return; }
+                                list.innerHTML = '';
+                                data.forEach(n=>{
+                                    const item = document.createElement('div');
+                                    item.className = 'px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 cursor-default';
+                                    item.textContent = `${n.created_at} • ${n.message}`;
+                                    list.appendChild(item);
+                                });
+                            }catch(e){}
+                        });
+                    }
+                });
+            })();
+        </script>
     </body>
 </html>

@@ -40,4 +40,37 @@ class Chamado extends Model
     {   
         return $this->hasMany(Anexo::class);
     }
+
+    // Notas internas (somente equipe/técnicos/admin)
+    public function notasInternas()
+    {
+        return $this->hasMany(\App\Models\NotaInterna::class);
+    }
+
+    // Seguidores do chamado (usuários que querem ser notificados)
+    public function seguidores()
+    {
+        return $this->belongsToMany(User::class, 'chamado_followers')->withTimestamps();
+    }
+
+    // SLA helpers
+    public function slaHours(): int
+    {
+        return match ($this->prioridade) {
+            'alta'  => 24,
+            'media' => 48,
+            default => 72,
+        };
+    }
+
+    public function slaDueAt(): ?\Illuminate\Support\Carbon
+    {
+        if (!$this->created_at) return null;
+        return $this->created_at->copy()->addHours($this->slaHours());
+    }
+
+    public function isFinalizado(): bool
+    {
+        return in_array($this->status, ['resolvido','fechado'], true);
+    }
 }

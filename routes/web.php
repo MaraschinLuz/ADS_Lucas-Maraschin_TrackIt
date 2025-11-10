@@ -12,6 +12,7 @@ use App\Http\Controllers\AdminEquipeController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\EquipeChatController;
 use App\Http\Controllers\EquipeMembrosController;
+use App\Http\Controllers\NotificationController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -38,6 +39,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('chamados', ChamadoController::class);
     Route::post('/chamados/{chamado}/mensagens', [ChamadoController::class, 'storeMensagem'])->name('mensagens.store');
     Route::post('/chamados/{chamado}/anexos',    [ChamadoController::class, 'adicionarAnexo'])->name('chamados.anexos.store');
+    // Notas internas e seguidores
+    Route::post('/chamados/{chamado}/notas',     [ChamadoController::class, 'storeNotaInterna'])->name('chamados.notas.store');
+    Route::delete('/chamados/{chamado}/notas/{nota}', [ChamadoController::class, 'deleteNotaInterna'])->name('chamados.notas.delete');
+    Route::post('/chamados/{chamado}/follow',    [ChamadoController::class, 'follow'])->name('chamados.follow');
+    Route::delete('/chamados/{chamado}/follow',  [ChamadoController::class, 'unfollow'])->name('chamados.unfollow');
 
     // Equipes (uso geral por técnicos/usuários)
     Route::resource('equipes', EquipeController::class);
@@ -58,6 +64,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/equipe/chat/messages', [EquipeChatController::class, 'list'])->name('equipe.chat.list');
     Route::post('/equipe/chat/messages', [EquipeChatController::class, 'store'])->name('equipe.chat.store');
     Route::get('/equipe/membros', [EquipeMembrosController::class, 'index'])->name('equipe.membros');
+
+    // Notificações (in-app)
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'read'])->name('notifications.read');
+    Route::post('/notifications/read-all', [NotificationController::class, 'readAll'])->name('notifications.read_all');
 });
 
 /**

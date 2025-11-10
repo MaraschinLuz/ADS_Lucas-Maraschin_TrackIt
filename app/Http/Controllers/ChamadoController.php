@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Equipe;
 use App\Models\Log;
 use App\Models\Mensagem;
+use App\Models\NotaInterna;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -108,13 +109,13 @@ public function index(): \Illuminate\View\View
     /**
      * Exibe os detalhes de um chamado específico.
      */
-public function show(Chamado $chamado): View
-{
-    $this->authorize('view', $chamado);
+    public function show(Chamado $chamado): View
+    {
+        $this->authorize('view', $chamado);
 
-    $chamado->load(['mensagens.user', 'equipe', 'anexos']); // carrega tudo de uma vez
-    return view('chamados.show', compact('chamado'));
-}
+        $chamado->load(['mensagens.user', 'equipe', 'anexos', 'notasInternas.user', 'seguidores']); // carrega tudo de uma vez
+        return view('chamados.show', compact('chamado'));
+    }
 
     /**
      * Exibe o formulário de edição de um chamado.
@@ -133,6 +134,8 @@ public function show(Chamado $chamado): View
     {
         $this->authorize('update', $chamado);
 
+        $oldStatus = $chamado->status;
+
         $rules = [
             'titulo' => 'required|string|max:255',
             'descricao' => 'required|string',
@@ -149,6 +152,30 @@ public function show(Chamado $chamado): View
         $validated = $request->validate($rules);
 
         $chamado->update($validated);
+
+        // Notificação de mudança de status
+        if (($validated['status'] ?? $oldStatus) !== $oldStatus) {
+            try {
+                $by = Auth::user()?->name ?? 'Sistema';
+                $notifyUsers = collect();
+                // dono do chamado
+                if ($chamado->user) { $notifyUsers->push($chamado->user); }
+                // equipe do chamado
+                if ($chamado->equipe) { $chamado->equipe->loadMissing('users'); }
+                if ($chamado->equipe && $chamado->equipe->users) {
+                    foreach ($chamado->equipe->users as $u) { $notifyUsers->push($u); }
+                }
+                $notifyUsers = $notifyUsers->unique('id')->reject(fn($u) => $u->id === Auth::id());
+                if ($notifyUsers->isNotEmpty()) {
+                    \Illuminate\Support\Facades\Notification::send(
+                        $notifyUsers,
+                        new \App\Notifications\ChamadoStatusChanged($chamado->id, (string)$chamado->titulo, $oldStatus, (string)$validated['status'], $by)
+                    );
+                }
+            } catch (\Throwable $e) {
+                // silencioso
+            }
+        }
 
         Log::create([
             'user_id' => auth()->id(),
@@ -218,5 +245,47 @@ public function show(Chamado $chamado): View
         }
 
         return redirect()->route('chamados.show', $chamado)->with('success', 'Anexo adicionado com sucesso!');
+    }
+
+    // Notas internas
+    public function storeNotaInterna(Request $request, Chamado $chamado): RedirectResponse
+    {
+        $this->authorize('view', $chamado);
+        $user = Auth::user();
+        if (!($user->isAdmin() || $user->isTecnico())) {
+            abort(403);
+        }
+        $data = $request->validate(['nota' => 'required|string|max:5000']);
+        $chamado->notasInternas()->create([
+            'user_id' => $user->id,
+            'nota' => $data['nota'],
+        ]);
+        return redirect()->route('chamados.show', $chamado)->with('success', 'Nota interna adicionada.');
+    }
+
+    public function deleteNotaInterna(Chamado $chamado, NotaInterna $nota): RedirectResponse
+    {
+        $this->authorize('view', $chamado);
+        $user = Auth::user();
+        if (!($user->isAdmin() || $user->isTecnico()) || $nota->chamado_id !== $chamado->id) {
+            abort(403);
+        }
+        $nota->delete();
+        return redirect()->route('chamados.show', $chamado)->with('success', 'Nota removida.');
+    }
+
+    // Seguidores
+    public function follow(Chamado $chamado): RedirectResponse
+    {
+        $this->authorize('view', $chamado);
+        $chamado->seguidores()->syncWithoutDetaching([Auth::id()]);
+        return back()->with('success', 'Você agora segue este chamado.');
+    }
+
+    public function unfollow(Chamado $chamado): RedirectResponse
+    {
+        $this->authorize('view', $chamado);
+        $chamado->seguidores()->detach([Auth::id()]);
+        return back()->with('success', 'Você deixou de seguir este chamado.');
     }
 }

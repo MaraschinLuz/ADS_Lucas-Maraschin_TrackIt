@@ -10,6 +10,17 @@
 
     <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <div class="text-sm text-gray-600 dark:text-gray-300">Período:</div>
+                <div class="flex flex-wrap gap-2">
+                    @foreach([7=>'7d',14=>'14d',30=>'30d',90=>'90d'] as $days => $label)
+                        <a href="{{ route('dashboard', ['period'=>$days]) }}"
+                           class="px-3 py-1 rounded-full border {{ ($period ?? 30) == $days ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200' : 'text-gray-600 dark:text-gray-300' }}">
+                            {{ $label }}
+                        </a>
+                    @endforeach
+                </div>
+            </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 <a href="{{ route('chamados.create') }}" class="rounded-lg p-4 bg-green-600 text-white shadow hover:bg-green-700 transition">Criar Chamado</a>
                 <a href="{{ route('chamados.index') }}" class="rounded-lg p-4 bg-blue-600 text-white shadow hover:bg-blue-700 transition">Ver Chamados</a>
@@ -18,8 +29,42 @@
             </div>
 
             @if(($role ?? null) === 'admin')
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-3">Visão por Equipe</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow"><div class="text-gray-500">Abertos</div><div class="text-3xl font-bold text-amber-600">{{ ($global_counts['aberto'] ?? 0) }}</div></div>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow"><div class="text-gray-500">Em andamento</div><div class="text-3xl font-bold text-blue-600">{{ ($global_counts['em andamento'] ?? 0) }}</div></div>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow"><div class="text-gray-500">Resolvidos</div><div class="text-3xl font-bold text-emerald-600">{{ ($global_counts['resolvido'] ?? 0) }}</div></div>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow"><div class="text-gray-500">Fechados</div><div class="text-3xl font-bold text-gray-600">{{ ($global_counts['fechado'] ?? 0) }}</div></div>
+                </div>
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mt-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-base font-semibold text-gray-800 dark:text-gray-100">SLA — Violações</h3>
+                        <span class="text-sm text-rose-600">{{ $sla_violations_count ?? 0 }} em atraso</span>
+                    </div>
+                    @if(($sla_violations_list ?? collect())->isEmpty())
+                        <div class="text-sm text-gray-500">Nenhum chamado em atraso. Ótimo!</div>
+                    @else
+                        <div class="overflow-auto">
+                            <table class="min-w-full text-sm">
+                                <thead class="text-gray-500 dark:text-gray-300">
+                                    <tr><th class="text-left py-1 pr-4">Chamado</th><th class="text-left py-1 pr-4">Equipe</th><th class="text-left py-1 pr-4">Aberto em</th><th class="text-left py-1 pr-4">SLA</th></tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($sla_violations_list as $c)
+                                    @php($due = $c->slaDueAt())
+                                    <tr class="border-t border-gray-200 dark:border-gray-700">
+                                        <td class="py-1 pr-4"><a href="{{ route('chamados.show', $c) }}" class="text-indigo-600">#{{ $c->id }} — {{ Str::limit($c->titulo, 40) }}</a></td>
+                                        <td class="py-1 pr-4">{{ $c->equipe->nome ?? '—' }}</td>
+                                        <td class="py-1 pr-4">{{ $c->created_at?->format('d/m H:i') }}</td>
+                                        <td class="py-1 pr-4"><span class="px-2 rounded bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-300" title="Vencia {{ $due?->format('d/m H:i') }}">Vencido</span></td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
+                </div>
+            <div>
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-3">Visão por Equipe</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                         @foreach(($equipes ?? []) as $eq)
                             <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
@@ -66,7 +111,7 @@
 
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
                 <div class="flex items-center justify-between mb-2">
-                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Tendência (últimos 30 dias)</h3>
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Tendência (últimos {{ $period ?? 30 }} dias)</h3>
                 </div>
                 <canvas id="trendChart" height="110"></canvas>
             </div>
@@ -139,3 +184,18 @@
         @endif
     </script>
 </x-app-layout>
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-base font-semibold text-gray-800 dark:text-gray-100">SLA — Violações</h3>
+                        <span class="text-sm text-rose-600">{{ $sla_violations_count ?? 0 }} em atraso</span>
+                    </div>
+                    @if(($sla_violations_count ?? 0) === 0)
+                        <div class="text-sm text-gray-500">Nenhum chamado em atraso.</div>
+                    @else
+                        <ul class="text-sm list-disc pl-5 text-gray-700 dark:text-gray-200">
+                            @foreach(($sla_violations_list ?? collect()) as $c)
+                                <li><a href="{{ route('chamados.show', $c) }}" class="text-indigo-600">#{{ $c->id }}</a> — {{ Str::limit($c->titulo, 40) }}</li>
+                            @endforeach
+                        </ul>
+                    @endif
+                </div>

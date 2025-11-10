@@ -62,7 +62,7 @@
                         @foreach($cards as $c)
                             @php($isActive = $activeStatus === $c['key'])
                             <a href="{{ $isActive ? route('chamados.index') : route('chamados.index',['status'=>$c['key']]) }}"
-                               class="rounded-lg p-3 shadow border @if($isActive) ring-2 ring-offset-1 ring-{{ $c['color'] }}-500 @endif bg-white dark:bg-gray-800">
+                               class="rounded-lg p-3 shadow border {{ $isActive ? ('ring-2 ring-offset-1 ring-' . $c['color'] . '-500') : '' }} bg-white dark:bg-gray-800">
                                 <div class="text-sm text-gray-500 dark:text-gray-400">{{ $c['label'] }}</div>
                                 <div class="text-2xl font-bold text-{{ $c['color'] }}-600">{{ $counts[$c['key']] ?? 0 }}</div>
                             </a>
@@ -112,6 +112,9 @@
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                                         {{ __('Criado Em') }}
                                     </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                        {{ __('SLA') }}
+                                    </th>
                                     <th scope="col" class="relative px-6 py-3">
                                         <span class="sr-only">{{ __('AÃ§Ãµes') }}</span>
                                     </th>
@@ -119,7 +122,7 @@
                                 </thead>
                                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                 @foreach ($chamados as $chamado)
-                                    <tr data-status="{{ $chamado->status }}">
+                                    <tr data-status="{{ $chamado->status }}" class="odd:bg-gray-50 dark:odd:bg-gray-800/60 hover:bg-gray-100 dark:hover:bg-gray-700/50">
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
                                                 {{ $chamado->id }}
@@ -133,7 +136,7 @@
                                         </td>
 
                                         <td class="px-6 py-4">
-                                            <div class="text-sm text-gray-900 dark:text-gray-100 truncate w-48">
+                                            <div class="text-sm text-gray-900 dark:text-gray-100 truncate max-w-xs" title="{{ $chamado->descricao }}">
                                                 {{ $chamado->descricao }}
                                             </div>
                                         </td>
@@ -148,13 +151,7 @@
                                         </td>
 
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                                                @if(($chamado->status ?? '') === 'aberto') bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300
-                                                @elseif(($chamado->status ?? '') === 'em andamento') bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300
-                                                @elseif(($chamado->status ?? '') === 'resolvido') bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300
-                                                @else bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300 @endif">
-                                                {{ ucfirst($chamado->status ?? 'Não definido') }}
-                                            </span>
+                                            <x-status-badge :value="$chamado->status" size="sm" />
                                         </td>
 
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
@@ -163,6 +160,22 @@
 
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                             {{ optional($chamado->created_at)->format('d/m/Y H:i') }}
+                                        </td>
+
+                                        @php
+                                            $due = $chamado->slaDueAt();
+                                            $now = \Illuminate\Support\Carbon::now();
+                                            $total = max(1, $chamado->slaHours());
+                                            $spent = $chamado->created_at ? $chamado->created_at->diffInHours($now) : 0;
+                                            $remaining = $total - $spent;
+                                            $state = $chamado->isFinalizado() ? 'done' : ($remaining <= 0 ? 'over' : ($remaining <= ($total*0.2) ? 'warn' : 'ok'));
+                                            $label = $chamado->isFinalizado() ? 'Concluído' : ($remaining <= 0 ? 'Vencido' : ($remaining . 'h'));
+                                            $color = match($state){ 'done'=>'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300', 'over'=>'bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-300', 'warn'=>'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300', default=>'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'};
+                                        @endphp
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $color }}" title="Vence {{ $due?->format('d/m H:i') }}">
+                                                {{ $label }}
+                                            </span>
                                         </td>
 
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-4">
