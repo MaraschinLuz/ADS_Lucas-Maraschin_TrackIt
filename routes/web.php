@@ -35,7 +35,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Chamados (CRUD)
+    // Chamados (CRUD + Kanban)
+    Route::get('/chamados/kanban', [ChamadoController::class, 'kanban'])->name('chamados.kanban');
     Route::resource('chamados', ChamadoController::class);
     Route::post('/chamados/{chamado}/mensagens', [ChamadoController::class, 'storeMensagem'])->name('mensagens.store');
     Route::post('/chamados/{chamado}/anexos',    [ChamadoController::class, 'adicionarAnexo'])->name('chamados.anexos.store');

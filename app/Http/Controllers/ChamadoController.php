@@ -23,7 +23,7 @@ class ChamadoController extends Controller
     /**
      * Exibe a lista de chamados do usuário.
      */
-public function index(): \Illuminate\View\View
+    public function index(): \Illuminate\View\View
 {
     $user = \Illuminate\Support\Facades\Auth::user();
 
@@ -55,8 +55,72 @@ public function index(): \Illuminate\View\View
             ->paginate(10);
     }
 
-    return view('chamados.index', compact('chamados'));
-}
+        return view('chamados.index', compact('chamados'));
+    }
+
+    /**
+     * Quadro kanban para técnicos/admin.
+     */
+    public function kanban(Request $request): View
+    {
+        $user = Auth::user();
+        if (!$user->isAdmin() && !$user->isTecnico()) {
+            abort(403);
+        }
+
+        $columns = [
+            ['key' => 'aberto', 'label' => 'Abertos', 'badge' => 'bg-amber-100 text-amber-800'],
+            ['key' => 'em andamento', 'label' => 'Em andamento', 'badge' => 'bg-blue-100 text-blue-800'],
+            ['key' => 'resolvido', 'label' => 'Resolvidos', 'badge' => 'bg-emerald-100 text-emerald-800'],
+            ['key' => 'fechado', 'label' => 'Fechados', 'badge' => 'bg-gray-200 text-gray-700'],
+        ];
+
+        $equipes = Equipe::orderBy('nome')->get(['id', 'nome']);
+        $selectedEquipeId = null;
+        $alerta = null;
+
+        if ($user->isAdmin()) {
+            if ($request->filled('equipe_id')) {
+                $valor = (int) $request->input('equipe_id');
+                if ($equipes->contains('id', $valor)) {
+                    $selectedEquipeId = $valor;
+                }
+            }
+        } else {
+            if (!$user->equipe_id) {
+                $alerta = 'Você ainda não está vinculado a uma equipe. Solicite a um administrador antes de usar o Kanban.';
+            } else {
+                $selectedEquipeId = $user->equipe_id;
+            }
+        }
+
+        $query = Chamado::with(['user', 'equipe']);
+
+        if ($selectedEquipeId) {
+            $query->where('equipe_id', $selectedEquipeId);
+        } elseif (!$user->isAdmin()) {
+            // técnico sem equipe já foi tratado acima; aqui evita vazamento
+            $query->whereRaw('1 = 0');
+        }
+
+        $chamados = $query->orderByDesc('prioridade')
+            ->orderBy('titulo')
+            ->get();
+
+        $kanbanData = [];
+        foreach ($columns as $column) {
+            $kanbanData[$column['key']] = $chamados->where('status', $column['key'])->values();
+        }
+
+        return view('chamados.kanban', [
+            'columns' => $columns,
+            'kanbanData' => $kanbanData,
+            'equipes' => $equipes,
+            'selectedEquipeId' => $selectedEquipeId,
+            'alerta' => $alerta,
+            'isAdmin' => $user->isAdmin(),
+        ]);
+    }
 
     /**
      * Exibe o formulário para criar um novo chamado.

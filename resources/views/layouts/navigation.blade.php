@@ -18,6 +18,13 @@
                     <x-nav-link :href="route('chamados.index')" :active="request()->routeIs('chamados.*')">
                         {{ __('Chamados') }}
                     </x-nav-link>
+                    @auth
+                        @if(auth()->user()->isAdmin() || auth()->user()->isTecnico())
+                            <x-nav-link :href="route('chamados.kanban')" :active="request()->routeIs('chamados.kanban')">
+                                {{ __('Kanban') }}
+                            </x-nav-link>
+                        @endif
+                    @endauth
 
                     @auth
                         @if(auth()->user()->equipe_id)
@@ -124,6 +131,11 @@
             </x-responsive-nav-link>
 
             @auth
+                @if(auth()->user()->isAdmin() || auth()->user()->isTecnico())
+                    <x-responsive-nav-link :href="route('chamados.kanban')" :active="request()->routeIs('chamados.kanban')">
+                        {{ __('Kanban') }}
+                    </x-responsive-nav-link>
+                @endif
                 @if(auth()->user()->equipe_id)
                     <x-responsive-nav-link :href="route('equipe.membros')" :active="request()->routeIs('equipe.membros')">
                         {{ __('Membros') }}
