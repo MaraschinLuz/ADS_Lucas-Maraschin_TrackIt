@@ -10,19 +10,19 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
 
-                    <!-- Título -->
+                    
                     <div class="mb-4">
                         <h3 class="text-lg font-bold text-gray-700 dark:text-gray-300">{{ __('Título:') }}</h3>
                         <p class="mt-1 text-gray-900 dark:text-gray-100">{{ $chamado->titulo }}</p>
                     </div>
 
-                    <!-- Descrição -->
+                    
                     <div class="mb-4">
                         <h3 class="text-lg font-bold text-gray-700 dark:text-gray-300">{{ __('Descrição:') }}</h3>
                         <p class="mt-1 text-gray-900 dark:text-gray-100 whitespace-pre-line">{{ $chamado->descricao }}</p>
                     </div>
 
-                    <!-- Prioridade -->
+                    
                     <div class="mb-4">
                         <h3 class="text-lg font-bold text-gray-700 dark:text-gray-300">{{ __('Prioridade:') }}</h3>
                         <span class="px-2 inline-flex text-sm leading-5 font-semibold rounded-full @if($chamado->prioridade == 'alta') bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300 @elseif($chamado->prioridade == 'media') bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300 @else bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 @endif">
@@ -30,13 +30,13 @@
                         </span>
                     </div>
 
-                    <!-- Status -->
+                    
                     <div class="mb-4">
                         <h3 class="text-lg font-bold text-gray-700 dark:text-gray-300">{{ __('Status:') }}</h3>
                         <x-status-badge :value="$chamado->status" />
                     </div>
 
-                    <!-- Criador -->
+                    
                     <div class="mb-4">
                         <h3 class="text-lg font-bold text-gray-700 dark:text-gray-300">{{ __('Criado por:') }}</h3>
                         <p class="mt-1 text-gray-900 dark:text-gray-100">
@@ -44,7 +44,7 @@
                         </p>
                     </div>
 
-                    <!-- Equipe Responsável -->
+                    
                     <div class="mb-6">
                         <h3 class="text-lg font-bold text-gray-700 dark:text-gray-300">{{ __('Equipe Responsável:') }}</h3>
                         <p class="mt-1 text-gray-900 dark:text-gray-100">
@@ -52,7 +52,7 @@
                         </p>
         </div>
 
-        <!-- Histórico de Anexos -->
+        
         <div class="mb-6">
             <h3 class="text-lg font-bold text-gray-700 dark:text-gray-300">{{ __('Histórico de Anexos') }}</h3>
 
@@ -118,7 +118,7 @@
         </div>
     </div>
 
-                    <!-- Botões -->
+                    
                     <div class="flex justify-between items-center mt-6">
                         <a href="{{ route('chamados.index') }}"
                            class="inline-flex items-center px-4 py-2 bg-gray-300 dark:bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-gray-700 dark:text-gray-300 uppercase tracking-widest hover:bg-gray-400 dark:hover:bg-gray-500 focus:bg-gray-400 dark:focus:bg-gray-500 active:bg-gray-500 dark:active:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">

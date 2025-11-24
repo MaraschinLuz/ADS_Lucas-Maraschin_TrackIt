@@ -23,12 +23,12 @@ class User extends Authenticatable
 
     public function equipe() { return $this->belongsTo(Equipe::class); }
 
-    // Papeis
+    
     public const ROLE_USER    = 'usuario';
-    public const ROLE_TECNICO = 'tecnica'; // compatível com seu dado atual
+    public const ROLE_TECNICO = 'tecnica'; 
     public const ROLE_ADMIN   = 'admin';
 
-    // Helpers
+    
     public function isAdmin(): bool   { return $this->role === self::ROLE_ADMIN; }
     public function isTecnico(): bool { return $this->role === self::ROLE_TECNICO; }
     public function isUsuario(): bool { return $this->role === self::ROLE_USER; }

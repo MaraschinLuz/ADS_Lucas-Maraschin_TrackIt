@@ -21,7 +21,7 @@
                         @enderror
                     </div>
 
-                    <!-- Você pode adicionar mais campos aqui se precisar -->
+                    
 
                     <div class="flex items-center justify-between">
                         <a href="{{ route('admin.equipes.index') }}" 

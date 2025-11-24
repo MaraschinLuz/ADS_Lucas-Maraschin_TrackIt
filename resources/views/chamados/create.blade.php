@@ -11,7 +11,7 @@
                 <form method="POST" action="{{ route('chamados.store') }}" enctype="multipart/form-data">
                     @csrf
 
-                    <!-- Título -->
+                    
                     <div class="mb-4">
                         <label for="titulo"
                             class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Título</label>
@@ -23,7 +23,7 @@
                         @enderror
                     </div>
 
-                    <!-- Descrição -->
+                    
                     <div class="mb-4">
                         <label for="descricao"
                             class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Descrição</label>
@@ -35,7 +35,7 @@
                         @enderror
                     </div>
 
-                    <!-- Prioridade -->
+                    
                     <div class="mb-4">
                         <label for="prioridade"
                             class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Prioridade</label>
@@ -51,7 +51,7 @@
                         @enderror
                     </div>
 
-                    <!-- Equipe -->
+                    
                     <div class="mb-4">
                         <label for="equipe_id"
                             class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Equipe
@@ -70,7 +70,7 @@
                         @enderror
                     </div>
 
-                    <!-- Anexar Arquivos -->
+                    
                     <div class="mb-4">
                         <label for="arquivos"
                             class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Anexar
@@ -82,7 +82,7 @@
                         @enderror
                     </div>
 
-                    <!-- Botões -->
+                    
                     <div class="flex items-center justify-between">
                         <a href="{{ route('dashboard') }}"
                             class="bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-300 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2">

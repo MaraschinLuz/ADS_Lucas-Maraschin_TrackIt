@@ -10,9 +10,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminUserController extends Controller
 {
-    /**
-     * Lista de usuários com filtros (nome/e-mail, papel e técnicos sem equipe).
-     */
+    
     public function index(Request $request)
     {
         $q        = (string) $request->input('q', '');
@@ -28,13 +26,13 @@ class AdminUserController extends Controller
             });
         }
 
-        // Aceita apenas roles válidos
+        
         $validRoles = ['usuario', 'tecnica', 'admin'];
         if (in_array($role, $validRoles, true)) {
             $query->where('role', $role);
         }
 
-        // Filtro: somente técnicos sem equipe
+        
         if ($semEqp) {
             $query->where('role', 'tecnica')->whereNull('equipe_id');
         }
@@ -50,18 +48,14 @@ class AdminUserController extends Controller
         return view('admin.usuarios.index', compact('users','equipes','roles','q','role','semEqp'));
     }
 
-    /**
-     * Formulário: criar usuário TÉCNICO.
-     */
+    
     public function createTecnico()
     {
         $equipes = Equipe::orderBy('nome')->get(['id','nome']);
         return view('admin.usuarios.create-tecnico', compact('equipes'));
     }
 
-    /**
-     * Persistir novo usuário técnico.
-     */
+    
     public function storeTecnico(Request $request)
     {
         $data = $request->validate([
@@ -75,7 +69,7 @@ class AdminUserController extends Controller
             'name'      => $data['name'],
             'email'     => $data['email'],
             'password'  => Hash::make($data['password']),
-            'role'      => 'tecnica',                 // força técnico
+            'role'      => 'tecnica',                 
             'equipe_id' => $data['equipe_id'] ?? null,
         ]);
 
@@ -84,19 +78,14 @@ class AdminUserController extends Controller
             ->with('success', 'Técnico criado com sucesso.');
     }
 
-    /**
-     * Formulário: promover/demover (role).
-     */
+    
     public function editRole(User $user)
     {
         $equipes = Equipe::orderBy('nome')->get(['id','nome']);
         return view('admin.usuarios.edit-role', compact('user','equipes'));
     }
 
-    /**
-     * Atualizar role (usuario/tecnica/admin) e equipe.
-     * Regra: apenas técnicos ficam associados a equipe; outros papéis removem a equipe.
-     */
+    
     public function updateRole(Request $request, User $user)
     {
         $data = $request->validate([

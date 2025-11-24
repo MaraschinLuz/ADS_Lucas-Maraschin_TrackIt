@@ -21,7 +21,7 @@ class Chamado extends Model
         'arquivo',
     ];
 
-    // Defina os relacionamentos (se houver)
+    
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -41,19 +41,19 @@ class Chamado extends Model
         return $this->hasMany(Anexo::class);
     }
 
-    // Notas internas (somente equipe/técnicos/admin)
+    
     public function notasInternas()
     {
         return $this->hasMany(\App\Models\NotaInterna::class);
     }
 
-    // Seguidores do chamado (usuários que querem ser notificados)
+    
     public function seguidores()
     {
         return $this->belongsToMany(User::class, 'chamado_followers')->withTimestamps();
     }
 
-    // SLA helpers
+    
     public function slaHours(): int
     {
         return match ($this->prioridade) {

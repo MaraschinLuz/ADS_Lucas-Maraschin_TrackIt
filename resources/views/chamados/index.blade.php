@@ -10,7 +10,7 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
 
-                    {{-- Avisos contextuais (ex.: tÃ©cnico sem equipe) --}}
+                    
                     @isset($alerta)
                         <div class="mb-4 rounded border border-yellow-200 bg-yellow-50 text-yellow-800 dark:border-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-200 px-4 py-3">
                             {{ $alerta }}
@@ -30,7 +30,7 @@
                             });
                         })();
                     </script>
-                    {{-- Resumo por status + filtros --}}
+                    
                     @php
                         $u = auth()->user();
                         $activeStatus = request('status');
@@ -166,7 +166,7 @@
                                         </td>
 
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-4">
-                                            {{-- Ver (se estÃ¡ listado, jÃ¡ pode ver â€” mas mantemos a policy por seguranÃ§a) --}}
+                                            
                                             @can('view', $chamado)
                                                 <a href="{{ route('chamados.show', $chamado) }}"
                                                    class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300">
@@ -174,7 +174,7 @@
                                                 </a>
                                             @endcan
 
-                                            {{-- Editar: sÃ³ se autorizado pela Policy --}}
+                                            
                                             @can('update', $chamado)
                                                 <a href="{{ route('chamados.edit', $chamado) }}"
                                                    class="text-yellow-600 hover:text-yellow-900 dark:text-yellow-400 dark:hover:text-yellow-300">
@@ -182,7 +182,7 @@
                                                 </a>
                                             @endcan
 
-                                            {{-- Excluir: sÃ³ se autorizado pela Policy --}}
+                                            
                                             @can('delete', $chamado)
                                                 <form action="{{ route('chamados.destroy', $chamado) }}" method="POST" class="inline">
                                                     @csrf

@@ -69,7 +69,7 @@ class EquipeChatController extends Controller
             'mensagem' => $validated['mensagem'],
         ]);
 
-        // Notifica membros da equipe (sem o remetente)
+        
         $alvos = User::where('equipe_id', $user->equipe_id)
             ->where('id', '!=', $user->id)
             ->get();

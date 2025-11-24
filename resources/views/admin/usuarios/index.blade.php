@@ -25,7 +25,7 @@
                 </div>
             @endif
 
-            {{-- Filtros --}}
+            
             <form method="GET" class="mb-4 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
                 <div class="p-4 grid grid-cols-1 md:grid-cols-4 gap-3">
                     <div>
@@ -60,7 +60,7 @@
                 </div>
             </form>
 
-            {{-- Tabela --}}
+            
             <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg">
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -79,7 +79,7 @@
                                     <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $u->name }}</td>
                                     <td class="px-4 py-2 text-gray-700 dark:text-gray-300">{{ $u->email }}</td>
 
-                                    {{-- Papel inline --}}
+                                    
                                     <td class="px-4 py-2">
                                         <form method="POST" action="{{ route('admin.usuarios.role.update', $u) }}" class="inline-flex items-center gap-2">
                                             @csrf
@@ -95,7 +95,7 @@
                                         </form>
                                     </td>
 
-                                    {{-- Equipe inline (habilita só se papel = técnica) --}}
+                                    
                                     <td class="px-4 py-2">
                                         <form method="POST" action="{{ route('admin.usuarios.role.update', $u) }}" class="inline-flex items-center gap-2">
                                             @csrf
@@ -131,7 +131,7 @@
                     </table>
                 </div>
 
-                {{-- Paginação --}}
+                
                 <div class="px-4 py-3 border-t border-gray-200 dark:border-gray-700">
                     {{ $users->links() }}
                 </div>

@@ -43,12 +43,12 @@
             </div>
         </form>
 
-        <!-- Botao para retornar a tela inicial -->
+        
         <div class="mt-4 text-center">
                 <a href="{{ url('/') }}" class="text-blue-500 hover:underline dark:text-blue-400">Voltar à Página Inicial</a>
             </div>
 
-        <!-- Botao de alternância de tema escuro -->
+        
         <button id="dark-mode-toggle" class="bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-full h-8 w-8 focus:outline-none mt-4" style="position: absolute; top: 20px; right: 20px;">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-5 w-5 mx-auto my-auto">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354a9 9 0 01-12.728 0 9 9 0 0112.728 0zM8 8.009c.193.006.382.02.576.043m4.464 1.202a9.095 9.095 0 01-4.316 4.315m4.464-1.202a9.095 9.095 0 014.316-4.314M12 8.009c.405 0 .808.04 1.202.117M12 8.009a9.094 9.094 0 01-8.43 8.43m16.863-1.019C16.946 16.979 16.168 18 15.354 18M3.636 9.86A9.092 9.092 0 014.05 6.047M12 20.009c-1.662 0-3.191-.407-4.464-1.085M16.5 12a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z" />

@@ -8,10 +8,10 @@
     <div class="py-12">
         <div class="max-w-md mx-auto bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6 text-gray-900 dark:text-gray-100">
-                {{-- O método HTTP deve ser PUT/PATCH para atualização --}}
+                
                 <form method="POST" action="{{ route('chamados.update', $chamado) }}">
                     @csrf
-                    @method('PUT') {{-- Isso é crucial para o método update --}}
+                    @method('PUT') 
 
                     <div class="mb-4">
                         <label for="titulo"
@@ -40,8 +40,7 @@
                             class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Prioridade</label>
                         <select name="prioridade" id="prioridade"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600"
-                            required @disabled(!Auth::user()->can('updatePriorityAndStatus', $chamado)) {{-- DESABILITA
-                            SE NÃO FOR TÉCNICA --}}>
+                            required @disabled(!Auth::user()->can('updatePriorityAndStatus', $chamado)) >
                             <option value="baixa" {{ old('prioridade', $chamado->prioridade) == 'baixa' ? 'selected' : '' }}>Baixa</option>
                             <option value="media" {{ old('prioridade', $chamado->prioridade) == 'media' ? 'selected' : '' }}>Média</option>
                             <option value="alta" {{ old('prioridade', $chamado->prioridade) == 'alta' ? 'selected' : '' }}>Alta</option>
@@ -69,14 +68,13 @@
                             @enderror
                     </div>
 
-                    {{-- Adicione o campo de status aqui --}}
+                    
                     <div class="mb-4">
                         <label for="status"
                             class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Status</label>
                         <select name="status" id="status"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-700 dark:border-gray-600"
-                            required @disabled(!Auth::user()->can('updatePriorityAndStatus', $chamado)) {{-- DESABILITA
-                            SE NÃO FOR TÉCNICA --}}>
+                            required @disabled(!Auth::user()->can('updatePriorityAndStatus', $chamado)) >
                             <option value="aberto" {{ old('status', $chamado->status) == 'aberto' ? 'selected' : '' }}>
                                 Aberto</option>
                             <option value="em andamento" {{ old('status', $chamado->status) == 'em andamento' ? 'selected' : '' }}>Em Andamento</option>

@@ -13,25 +13,19 @@ class Equipe extends Model
         'nome',
     ];
 
-    /**
-     * Uma equipe pode ter vários chamados.
-     */
+    
     public function chamados()
     {
         return $this->hasMany(Chamado::class);
     }
 
-    /**
-     * Uma equipe pode ter vários usuários (técnicos).
-     */
+    
     public function users()
     {
         return $this->hasMany(User::class, 'equipe_id');
     }
 
-    /**
-     * Mensagens do chat desta equipe.
-     */
+    
     public function mensagens()
     {
         return $this->hasMany(\App\Models\EquipeMensagem::class, 'equipe_id');

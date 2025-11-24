@@ -24,7 +24,7 @@ class DashboardController extends Controller
         ];
 
         if ($role === 'admin') {
-            // Cards por equipe (contagem por status)
+            
             $equipes = Equipe::orderBy('nome')
                 ->withCount([
                     'chamados as abertos_count' => function ($q) { $q->where('status', 'aberto'); },
@@ -33,7 +33,7 @@ class DashboardController extends Controller
                     'chamados as fechados_count' => function ($q) { $q->where('status', 'fechado'); },
                 ])->get(['id','nome']);
 
-            // Tendência geral (30 dias)
+            
             $trend = Chamado::selectRaw("DATE(created_at) as d, COUNT(*) as total")
                 ->where('created_at', '>=', $from)
                 ->groupBy('d')
@@ -42,7 +42,7 @@ class DashboardController extends Controller
 
             $result['equipes'] = $equipes;
             $result['trend'] = $trend;
-            // KPIs globais
+            
             $statusCounts = Chamado::selectRaw('status, COUNT(*) as c')->groupBy('status')->pluck('c','status');
             $result['global_counts'] = [
                 'aberto' => (int) ($statusCounts['aberto'] ?? 0),
@@ -51,7 +51,7 @@ class DashboardController extends Controller
                 'fechado' => (int) ($statusCounts['fechado'] ?? 0),
             ];
 
-            // Violações de SLA (abertos/andamento vencidos)
+            
             $abertos = Chamado::with('user','equipe')
                 ->whereNotIn('status', ['resolvido','fechado'])
                 ->latest()
@@ -64,7 +64,7 @@ class DashboardController extends Controller
             });
             $result['sla_violations_count'] = $violados->count();
             $result['sla_violations_list'] = $violados->sortBy('created_at')->take(5);
-            // Dados prontos para gráficos (evita lógica PHP complexa no Blade)
+            
             $result['team_labels'] = $equipes->pluck('nome')->values();
             $result['team_data'] = [
                 'aberto'        => $equipes->map(fn($e) => (int) ($e->abertos_count ?? 0))->values(),
@@ -96,9 +96,9 @@ class DashboardController extends Controller
                 'fechado' => (int) ($counts['fechado'] ?? 0),
             ];
             $result['trend'] = $trend;
-            $result['equipes'] = $equipes; // para título
+            $result['equipes'] = $equipes; 
 
-            // Violações de SLA (somente da equipe)
+            
             $abertos = Chamado::with('user','equipe')
                 ->where('equipe_id', $equipeId)
                 ->whereNotIn('status', ['resolvido','fechado'])
@@ -108,7 +108,7 @@ class DashboardController extends Controller
             $result['sla_violations_count'] = $violados->count();
             $result['sla_violations_list'] = $violados->sortBy('created_at')->take(5);
         } else {
-            // Usuário comum: seus próprios chamados
+            
             $counts = Chamado::where('user_id', $user->id)
                 ->selectRaw('status, COUNT(*) as c')
                 ->groupBy('status')

@@ -8,18 +8,18 @@
         <title>TrackIt</title>
         <link rel="icon" type="image/png" href="{{ asset('img/trackit.png') }}">
 
-        <!-- Fonts -->
+        
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-        <!-- Scripts -->
+        
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased bg-white text-gray-900">
         <div class="min-h-screen bg-white">
             @include('layouts.navigation')
 
-            {{-- Admin Toolbar: aparece apenas para administradores --}}
+            
             @auth
                 @if(auth()->user()->isAdmin())
                     <div class="bg-indigo-50 border-b border-indigo-200/70">
@@ -28,23 +28,20 @@
                                 Você está logado como <span class="font-semibold">Administrador</span>.
                             </div>
                             <div class="flex flex-wrap gap-2">
-                                {{-- Atalhos de administração (adicione mais quando criar as telas) --}}
+                                
                                 <a href="{{ route('admin.equipes.index') }}"
                                    class="inline-flex items-center rounded-md px-3 py-1.5 text-sm font-medium
                                           bg-white text-indigo-700 ring-1 ring-inset ring-indigo-200 hover:bg-indigo-50">
                                     Gerir Equipes
                                 </a>
-                                {{-- Exemplo de futuros atalhos:
-                                <a href="{{ route('admin.usuarios.index') }}" class="inline-flex ...">Usuários</a>
-                                <a href="{{ route('admin.config') }}" class="inline-flex ...">Configurações</a>
-                                --}}
+                                
                             </div>
                         </div>
                     </div>
                 @endif
             @endauth
 
-            <!-- Page Heading -->
+            
             @isset($header)
                 <header class="bg-white shadow">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -53,7 +50,7 @@
                 </header>
             @endisset
 
-            <!-- Page Content -->
+            
             <main>
                 @include('components.toast')
                 @hasSection('content')

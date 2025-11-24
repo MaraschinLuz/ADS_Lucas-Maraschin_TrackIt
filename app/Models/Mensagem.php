@@ -9,7 +9,7 @@ class Mensagem extends Model
 {
     use HasFactory;
 
-    protected $table = 'mensagens';  // Aqui o nome correto da tabela
+    protected $table = 'mensagens';  
 
     protected $fillable = [
         'chamado_id',

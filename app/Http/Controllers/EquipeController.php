@@ -12,14 +12,12 @@ use App\Models\User;
 
 class EquipeController extends Controller
 {
-    /**
-     * Exibe a lista de equipes.
-     */
+    
 
      public function atribuirUsuariosForm()
 {
     $equipes = Equipe::all();
-    $usuarios = User::all(); // Ou filtre conforme sua regra de negócio
+    $usuarios = User::all(); 
 
     return view('equipes.atribuir', compact('equipes', 'usuarios'));
 }
@@ -30,17 +28,13 @@ class EquipeController extends Controller
         return view('equipes.index', compact('equipes'));
     }
 
-    /**
-     * Exibe o formulário para criar uma nova equipe.
-     */
+    
     public function create(): View
     {
         return view('equipes.create');
     }
 
-    /**
-     * Armazena uma nova equipe no banco de dados.
-     */
+    
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
@@ -58,27 +52,21 @@ class EquipeController extends Controller
         return redirect()->route('equipes.index')->with('success', 'Equipe criada com sucesso!');
     }
 
-    /**
-     * Exibe os detalhes de uma equipe específica.
-     */
+    
     public function show(string $id): View
     {
         $equipe = Equipe::findOrFail($id);
         return view('equipes.show', compact('equipe'));
     }
 
-    /**
-     * Exibe o formulário para editar uma equipe específica.
-     */
+    
     public function edit(string $id): View
     {
         $equipe = Equipe::findOrFail($id);
         return view('equipes.edit', compact('equipe'));
     }
 
-    /**
-     * Atualiza os dados de uma equipe específica.
-     */
+    
     public function update(Request $request, string $id): RedirectResponse
     {
         $equipe = Equipe::findOrFail($id);
@@ -98,9 +86,7 @@ class EquipeController extends Controller
         return redirect()->route('equipes.index')->with('success', 'Equipe atualizada com sucesso!');
     }
 
-    /**
-     * Remove uma equipe do banco de dados.
-     */
+    
     public function destroy(string $id): RedirectResponse
     {
         $equipe = Equipe::findOrFail($id);

@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            // Garante que a coluna 'role' exista e define o default como 'usuario'
+            
             $table->string('role')->default('usuario')->change();
         });
     }
@@ -17,7 +17,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            // Se quiser reverter, remove o default
+            
             $table->string('role')->default(null)->change();
         });
     }

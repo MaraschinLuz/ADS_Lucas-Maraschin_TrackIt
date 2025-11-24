@@ -29,7 +29,7 @@
                 </div>
             @endif
 
-            {{-- Técnicos sem equipe --}}
+            
             <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg mb-6">
                 <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                     <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Técnicos sem equipe</h3>
@@ -74,7 +74,7 @@
                 </div>
             </div>
 
-            {{-- Equipes com seus técnicos --}}
+            
             @forelse($equipes as $equipe)
                 <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg mb-6">
                     <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
@@ -83,7 +83,7 @@
                             <span class="text-sm text-gray-500 dark:text-gray-400">ID #{{ $equipe->id }}</span>
                             <a href="{{ route('equipes.edit', $equipe) }}"
                                class="inline-flex items-center gap-1 px-3 py-1.5 rounded-md text-sm font-medium bg-yellow-500 text-white hover:bg-yellow-600">
-                                <!-- pencil icon -->
+                                
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4"><path d="M5.433 13.917l-1.233.308a1 1 0 01-1.213-1.213l.308-1.233a2 2 0 01.528-.96l7.596-7.596a2 2 0 112.828 2.828l-7.596 7.596a2 2 0 01-.96.528z" /><path d="M12.293 2.293a1 1 0 011.414 0l1.999 1.999a1 1 0 010 1.414l-.586.586-3.414-3.414.586-.586z"/></svg>
                                 Editar
                             </a>
@@ -108,7 +108,7 @@
                                                 <td class="px-4 py-2 text-gray-900 dark:text-gray-100">{{ $tec->name }}</td>
                                                 <td class="px-4 py-2 text-gray-700 dark:text-gray-300">{{ $tec->email }}</td>
                                                 <td class="px-4 py-2 text-right">
-                                                    {{-- Remover da equipe --}}
+                                                    
                                                     <form method="POST" action="{{ route('admin.equipes.remover') }}" class="inline">
                                                         @csrf
                                                         <input type="hidden" name="user_id" value="{{ $tec->id }}">
@@ -118,7 +118,7 @@
                                                         </x-secondary-button>
                                                     </form>
 
-                                                    {{-- Mover para outra equipe --}}
+                                                    
                                                     <form method="POST" action="{{ route('admin.equipes.atribuir') }}" class="inline-flex items-center gap-2 ml-2">
                                                         @csrf
                                                         <input type="hidden" name="user_id" value="{{ $tec->id }}">

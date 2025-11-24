@@ -19,8 +19,7 @@
                 <span class="text-gray-400 mx-2">|</span>
                 <a href="{{ route('register') }}" class="text-green-500 hover:underline dark:text-green-400">Registrar</a>
             </div>
-            <!--<button id="dark-mode-toggle" class="bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-full h-8 w-8 focus:outline-none mt-4">
-                </button>-->
+            
         </div>
     </body>
 
