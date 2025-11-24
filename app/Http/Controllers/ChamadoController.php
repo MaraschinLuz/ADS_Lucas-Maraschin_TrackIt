@@ -177,7 +177,7 @@ class ChamadoController extends Controller
     {
         $this->authorize('view', $chamado);
 
-        $chamado->load(['mensagens.user', 'equipe', 'anexos', 'notasInternas.user', 'seguidores']); // carrega tudo de uma vez
+        $chamado->load(['mensagens.user', 'equipe', 'anexos', 'notasInternas.user', 'seguidores', 'user']); // carrega tudo de uma vez
         return view('chamados.show', compact('chamado'));
     }
 

@@ -15,24 +15,23 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gradient-to-b from-indigo-50 to-white dark:from-gray-900 dark:to-gray-900">
+    <body class="font-sans antialiased bg-white text-gray-900">
+        <div class="min-h-screen bg-white">
             @include('layouts.navigation')
 
             {{-- Admin Toolbar: aparece apenas para administradores --}}
             @auth
                 @if(auth()->user()->isAdmin())
-                    <div class="bg-indigo-50 dark:bg-indigo-900/40 border-b border-indigo-200/70 dark:border-indigo-800">
+                    <div class="bg-indigo-50 border-b border-indigo-200/70">
                         <div class="max-w-7xl mx-auto py-2 px-4 sm:px-6 lg:px-8 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-                            <div class="text-sm font-medium text-indigo-700 dark:text-indigo-200">
+                            <div class="text-sm font-medium text-indigo-700">
                                 Você está logado como <span class="font-semibold">Administrador</span>.
                             </div>
                             <div class="flex flex-wrap gap-2">
                                 {{-- Atalhos de administração (adicione mais quando criar as telas) --}}
                                 <a href="{{ route('admin.equipes.index') }}"
                                    class="inline-flex items-center rounded-md px-3 py-1.5 text-sm font-medium
-                                          bg-white text-indigo-700 ring-1 ring-inset ring-indigo-200 hover:bg-indigo-50
-                                          dark:bg-indigo-800/60 dark:text-indigo-100 dark:hover:bg-indigo-800">
+                                          bg-white text-indigo-700 ring-1 ring-inset ring-indigo-200 hover:bg-indigo-50">
                                     Gerir Equipes
                                 </a>
                                 {{-- Exemplo de futuros atalhos:
@@ -47,7 +46,7 @@
 
             <!-- Page Heading -->
             @isset($header)
-                <header class="bg-white dark:bg-gray-800 shadow">
+                <header class="bg-white shadow">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>

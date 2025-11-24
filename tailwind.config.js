@@ -20,5 +20,5 @@ export default {
     },
 
     plugins: [forms],
-    darkMode: 'media', // Use 'media' para detecção do tema do sistema
+    darkMode: 'class', // Sem detecção automática pelo sistema
 };

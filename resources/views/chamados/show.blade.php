@@ -36,6 +36,14 @@
                         <x-status-badge :value="$chamado->status" />
                     </div>
 
+                    <!-- Criador -->
+                    <div class="mb-4">
+                        <h3 class="text-lg font-bold text-gray-700 dark:text-gray-300">{{ __('Criado por:') }}</h3>
+                        <p class="mt-1 text-gray-900 dark:text-gray-100">
+                            {{ $chamado->user?->name ?? __('Usuário removido') }}
+                        </p>
+                    </div>
+
                     <!-- Equipe Responsável -->
                     <div class="mb-6">
                         <h3 class="text-lg font-bold text-gray-700 dark:text-gray-300">{{ __('Equipe Responsável:') }}</h3>
