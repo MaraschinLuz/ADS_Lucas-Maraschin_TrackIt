@@ -64,7 +64,9 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
                         @foreach($columns as $column)
-                            @php($cards = $kanbanData[$column['key']] ?? collect())
+                            @php
+                                $cards = $kanbanData[$column['key']] ?? collect();
+                            @endphp
                             <div class="rounded-lg bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 flex flex-col">
                                 <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
                                     <div class="flex items-center gap-2">
